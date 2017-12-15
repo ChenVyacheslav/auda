@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://serviceinterface_v1.b2b.audatex.com" targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <schema elementFormDefault="qualified" targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://www.w3.org/2001/XMLSchema">
+      <complexType name="B2BRequest">
+        <annotation>
+          <documentation>
+The generic request of an AudaNet B2B web service.     </documentation>
+        </annotation>
+        <sequence>
+          <element minOccurs="0" maxOccurs="unbounded" name="parameter" type="tns:B2BParameter">
+            <annotation>
+              <documentation>
+The parameters for the invocation. This includes the callers credentials (loginId,
+                    password), optionally the xslt stylesheet name (if the payload needs to be transformed to SAXIF) and
+                    additional parameters specific to the operation.       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="payload" type="anyType">
+            <annotation>
+              <documentation>
+The data input for the operation to invoke, if required by the operation. The payload
+                    is typically an XML fragment or a string containing XML.       </documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </complexType>
+      <complexType name="B2BParameter">
+        <annotation>
+          <documentation>
+A parameter item to pass to an AudaNet B2B web service. Each parameter consists of a name
+                and a value. The name is case sensitive.     </documentation>
+        </annotation>
+        <sequence>
+          <element name="name" type="string">
+            <annotation>
+              <documentation>
+The name of the parameter. Must be unique in the parameter list.       </documentation>
+            </annotation>
+          </element>
+          <element name="value" type="string">
+            <annotation>
+              <documentation>
+The value of the parameter.       </documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="xsltParameter" type="boolean" use="optional">
+          <annotation>
+            <documentation>
+NB! This attribute is deprecated. Please use the context attribute instead.
+                The parameters having this attribute set to "true" will be passed to the XSLT
+                  transformation instead of to the service operation.      </documentation>
+          </annotation>
+        </attribute>
+        <attribute name="context" type="string" use="optional">
+          <annotation>
+            <documentation>
+The parameters with the context attribute set to a valid context will
+                not be passed to the service operation but to one of the contexts. Currently 
+                supported values:
+                1. 'XSLT' - same as the old xsltParameter=true attribute, parameters marked with the
+                XSLT context will be passed to the XSL transformation engine.
+                2. 'BRE' - parameters with the BRE context will be passed to the BRE rule engine as 
+                variables.      </documentation>
+          </annotation>
+        </attribute>
+      </complexType>
+      <complexType name="B2BResponse">
+        <annotation>
+          <documentation>
+The generic response of an AudaNet B2B web service.     </documentation>
+        </annotation>
+        <sequence>
+          <element name="returnCode" type="int">
+            <annotation>
+              <documentation>
+Indicates if the invocation was successful or not. Can have the following values:
+                    0: Success. The operation completed successfully.
+                    1: Warning. The operation completed, but some sub-tasks had a problem. The messages contain the
+                    warning information.
+                    2: Error. The operation failed. The messages contain the error information.       </documentation>
+            </annotation>
+          </element>
+          <element name="loginId" type="string">
+            <annotation>
+              <documentation>
+The loginId of the user invoking the service.       </documentation>
+            </annotation>
+          </element>
+          <element name="hostName" type="string">
+            <annotation>
+              <documentation>
+The host which processed the request.       </documentation>
+            </annotation>
+          </element>
+          <element name="timestamp" type="dateTime">
+            <annotation>
+              <documentation>
+The timestamp when the response was generated.       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="1" maxOccurs="unbounded" name="message" type="tns:B2BMessage">
+            <annotation>
+              <documentation>
+Contains information, warning or error messages. The service
+                    always returns at least one
+                    message, but there can be more (e.g. multiple warnings).       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="payload" type="anyType">
+            <annotation>
+              <documentation>
+The payload, if the invoked operation returns a payload to the client. The payload is
+                    typically an XML fragment or a string containing XML.       </documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </complexType>
+      <complexType name="B2BMessage">
+        <annotation>
+          <documentation>
+Contains an information, warning or error message. A message consists of a unique code and
+                a text. A translated text to the users locale may be available as well.     </documentation>
+        </annotation>
+        <sequence>
+          <element name="messageCode" type="string">
+            <annotation>
+              <documentation>
+Contains the code for the message. This code is a unique alphanumeric
+                    identifier.
+                         </documentation>
+            </annotation>
+          </element>
+          <element name="severity" type="int">
+            <annotation>
+              <documentation>
+Indicates the kind of message:
+                    0: information message
+                    1: warning
+                    2: error       </documentation>
+            </annotation>
+          </element>
+          <element name="text" type="string">
+            <annotation>
+              <documentation>
+A textual description in English of what happened.       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="localizedText" type="string">
+            <annotation>
+              <documentation>
+Contains the translated message text, if available, in the users locale.
+                         </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" maxOccurs="unbounded" name="additionalInfo" type="string">
+            <annotation>
+              <documentation>
+Contains formalized additional information, if available. For example, this can be
+                    numeric arguments to an error message. Each specific message code defines if it is provides
+                    additional information and of what type that is.       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="caseId" type="string">
+            <annotation>
+              <documentation>
+The Id of the case that the service operated on. If a new case has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created case.
+                    The client may need this Id to reference this case in subsequent operations.       </documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="taskId" type="string">
+            <annotation>
+              <documentation>
+The Id of the task that the service operated on. If a new task has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created task.
+                    The client may need this Id to reference this task in subsequent operations.       </documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </complexType>
+      <element name="pingRequest" type="tns:B2BRequest" />
+      <element name="pingResponse" type="tns:B2BResponse" />
+      <element name="getHistoryRequest" type="tns:B2BRequest" />
+      <element name="getHistoryResponse" type="tns:B2BResponse" />
+      <element name="getImageRequest" type="tns:B2BRequest" />
+      <element name="getImageResponse" type="tns:B2BResponse" />
+      <element name="getImagesRequest" type="tns:B2BRequest" />
+      <element name="getImagesResponse" type="tns:B2BResponse" />
+    </schema>
+  </types>
+  <message name="pingRequest">
+    <part name="pingRequest" element="tns:pingRequest" />
+  </message>
+  <message name="pingResponse">
+    <part name="pingResponse" element="tns:pingResponse" />
+  </message>
+  <message name="getHistoryRequest">
+    <part name="getHistoryRequest" element="tns:getHistoryRequest" />
+  </message>
+  <message name="getHistoryResponse">
+    <part name="getHistoryResponse" element="tns:getHistoryResponse" />
+  </message>
+  <message name="getImageRequest">
+    <part name="getImageRequest" element="tns:getImageRequest" />
+  </message>
+  <message name="getImageResponse">
+    <part name="getImageResponse" element="tns:getImageResponse" />
+  </message>
+  <message name="getImagesRequest">
+    <part name="getImagesRequest" element="tns:getImagesRequest" />
+  </message>
+  <message name="getImagesResponse">
+    <part name="getImagesResponse" element="tns:getImagesResponse" />
+  </message>
+  <portType name="AudaHistoryServicePort">
+    <documentation>
+AXN AudaHistory related operations.  </documentation>
+    <operation name="ping">
+      <documentation>
+Does nothing else than returning a fixed response. This
+      can be used
+      to test the connection to and the SOAP request handling
+      of the AudaNet
+      server.
+      No user credentials need to be specified for
+      this operation.
+       </documentation>
+      <input name="pingRequest" message="tns:pingRequest" />
+      <output name="pingResponse" message="tns:pingResponse" />
+    </operation>
+    <operation name="getHistory">
+      <documentation>
+Executes a query to the AXR database to find out vehicle history.
+	
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "vin ": The VIN code of the car whose history is about to be checked
+      
+      * Parameter "plateNumber ": (Optional) The plate number of the car whose history is about to be checked
+      
+      * Parameter "filterUseForDHS ": (Optional) Filter, that excludes specific tasks in the AudaHistory response,
+        based on the SAXIF field 'UseForDamageHistoryService'. Default false.
+         </documentation>
+      <input name="getHistoryRequest" message="tns:getHistoryRequest" />
+      <output name="getHistoryResponse" message="tns:getHistoryResponse" />
+    </operation>
+    <operation name="getImage">
+      <documentation>
+Fetches image from StaticFileService.
+    
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "guid ": Guid of the image that should be fetched
+         </documentation>
+      <input name="getImageRequest" message="tns:getImageRequest" />
+      <output name="getImageResponse" message="tns:getImageResponse" />
+    </operation>
+    <operation name="getImages">
+      <documentation>
+Fetches all images belonging to AudaHistory case using StaticFileService
+    
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "caseId ": CaseId of AudaHistory case
+      
+      * Parameter "isBinaryContentIncluded ": Optional. Default false. Defines whether binary images content should be loaded along with images meta-data   </documentation>
+      <input name="getImagesRequest" message="tns:getImagesRequest" />
+      <output name="getImagesResponse" message="tns:getImagesResponse" />
+    </operation>
+  </portType>
+  <binding name="AudaHistoryServiceSoap" type="tns:AudaHistoryServicePort">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="ping">
+      <wsdlsoap:operation soapAction="" />
+      <input name="pingRequest">
+        <wsdlsoap:body use="literal" />
+      </input>
+      <output name="pingResponse">
+        <wsdlsoap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getHistory">
+      <wsdlsoap:operation soapAction="" />
+      <input name="getHistoryRequest">
+        <wsdlsoap:body use="literal" />
+      </input>
+      <output name="getHistoryResponse">
+        <wsdlsoap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getImage">
+      <wsdlsoap:operation soapAction="" />
+      <input name="getImageRequest">
+        <wsdlsoap:body use="literal" />
+      </input>
+      <output name="getImageResponse">
+        <wsdlsoap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getImages">
+      <wsdlsoap:operation soapAction="" />
+      <input name="getImagesRequest">
+        <wsdlsoap:body use="literal" />
+      </input>
+      <output name="getImagesResponse">
+        <wsdlsoap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="AudaHistoryService">
+    <documentation>
+AXN AudaHistory related operations.  </documentation>
+    <port name="AudaHistoryServicePort" binding="tns:AudaHistoryServiceSoap">
+      <wsdlsoap:address location="https://www.audatex.ru/b2b/services/AudaHistoryService_v1" />
+    </port>
+  </service>
+</definitions>

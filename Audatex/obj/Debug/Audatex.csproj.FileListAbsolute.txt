@@ -1,0 +1,7 @@
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\obj\Debug\Audatex.csprojResolveAssemblyReference.cache
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\obj\Debug\Audatex.csproj.CoreCompileInputs.cache
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\bin\Debug\Audatex.exe.config
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\bin\Debug\Audatex.exe
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\bin\Debug\Audatex.pdb
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\obj\Debug\Audatex.exe
+c:\users\thor\documents\visual studio 2017\Projects\Audatex\Audatex\obj\Debug\Audatex.pdb
